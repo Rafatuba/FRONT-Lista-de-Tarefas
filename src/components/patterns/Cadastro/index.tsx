@@ -27,7 +27,7 @@ export function Cadastro() {
           ]} 
           value={email}
           onChangeText={texto => setEmail(texto)}
-          placeholder='Digite seu e-mail'
+          placeholder='Novo e-mail'
           placeholderTextColor={theme.colors.base.gray300}
           />
       <TextInput 
@@ -36,7 +36,7 @@ export function Cadastro() {
           ]} 
           value={senha}
           onChangeText={texto => setSenha(texto)}
-          placeholder='Digite uma senha'
+          placeholder='Nova senha'
           placeholderTextColor={theme.colors.base.gray300}
           secureTextEntry
           />
@@ -46,7 +46,7 @@ export function Cadastro() {
         ]} 
         value={confirmaSenha}
         onChangeText={texto => setConfirmaSenha(texto)}
-        placeholder='Confirmar senha'
+        placeholder='Confirmar nova senha'
         placeholderTextColor={theme.colors.base.gray300}
         secureTextEntry
       />

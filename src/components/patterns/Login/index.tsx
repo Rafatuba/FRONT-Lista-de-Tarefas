@@ -4,7 +4,7 @@ import { styles } from "./styles";
 import { theme } from "../../../theme";
 import logoImage from "../../../assets/logo2.png";
 
-export function Login() {
+export function Login({navigation}) {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
 
@@ -29,15 +29,15 @@ export function Login() {
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => console.log("Clicou em ENTRAR")}
+        onPress={() => { navigation.navigate('Principal') }}
       >
         <Text style={[styles.text]}>Entrar</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => console.log("Clicou em novo usuário")}
+        onPress={() => { navigation.navigate('Cadastro') }}
       >
-        <Text style={[styles.text]}>Novo usuário</Text>
+        <Text style={[styles.text]}>Cadastrar usuário</Text>
       </TouchableOpacity>
     </View>
   );
