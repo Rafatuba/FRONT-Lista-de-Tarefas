@@ -10,6 +10,10 @@ export const styles = StyleSheet.create({
     height: 173,
     position: 'relative'
   },
+  img: {
+    width: '100%',
+    height: '50%',
+  },
   form: {
     position: 'absolute',
     bottom: -54 / 2,
