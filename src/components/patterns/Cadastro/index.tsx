@@ -6,6 +6,7 @@ import {
   Image,
   TouchableOpacity,
   Text,
+  Vibration,
 } from "react-native";
 import { styles } from "./styles";
 import { theme } from "../../../theme";
@@ -54,7 +55,8 @@ export function Cadastro() {
       setErrors({ email: "", senha: "", confirmaSenha: "" });
 
       if (resultado == "sucesso") {
-        Alert.alert("PARABÉNS!!! Você foi cadastrado com sucesso!");
+        Alert.alert("Cadastrado com sucesso!");
+        Vibration.vibrate()
         setEmail("");
         setSenha("");
         setConfirmaSenha("");
