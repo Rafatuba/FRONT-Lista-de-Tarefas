@@ -14,11 +14,16 @@ import logoImage from "../../../assets/logo2.png";
 import * as Yup from "yup";
 
 import { cadastrar } from "../../../servicos/requsicoesFirebase";
+import { Alerta } from "../../Alerta";
 
 export function Cadastro() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [confirmaSenha, setConfirmaSenha] = useState("");
+
+  const [statusErro, setStatusErro] = useState("");
+  const [mensagemError, setMensagemError] = useState("");
+
   const [errors, setErrors] = useState<{
     email: string;
     senha: string;
@@ -53,15 +58,15 @@ export function Cadastro() {
       setSenha("");
       setConfirmaSenha("");
       setErrors({ email: "", senha: "", confirmaSenha: "" });
-
+      setStatusErro('firebase')
       if (resultado == "sucesso") {
-        Alert.alert("Cadastrado com sucesso!");
-        Vibration.vibrate()
+        setMensagemError("Cadastrado com sucesso!");
+        Vibration.vibrate();
         setEmail("");
         setSenha("");
         setConfirmaSenha("");
       } else {
-        Alert.alert(resultado);
+        setMensagemError(resultado);
       }
     } catch (error) {
       if (error instanceof Yup.ValidationError) {
@@ -111,6 +116,14 @@ export function Cadastro() {
       {errors.confirmaSenha && (
         <Text style={styles.errorText}>{errors.confirmaSenha}</Text>
       )}
+
+      <Alerta
+        mensagem={mensagemError}
+        error={statusErro == "firebase"}
+        setError={setStatusErro}
+        duracao={5000}
+      />
+
       <TouchableOpacity
         style={styles.button}
         onPress={() => realizarCadastro()}

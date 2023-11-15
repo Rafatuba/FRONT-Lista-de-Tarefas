@@ -51,5 +51,8 @@ export const styles = StyleSheet.create({
   },
   text: {
     color: theme.colors.base.gray100
+  },
+  errorText: {
+    color: theme.colors.base.danger
   }
 })

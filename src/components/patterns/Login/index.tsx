@@ -1,12 +1,72 @@
 import React, { useState } from "react";
-import { TextInput, View, Image, TouchableOpacity, Text } from "react-native";
+import {
+  TextInput,
+  View,
+  Image,
+  TouchableOpacity,
+  Text,
+  Vibration,
+} from "react-native";
 import { styles } from "./styles";
 import { theme } from "../../../theme";
 import logoImage from "../../../assets/logo2.png";
+import * as Yup from "yup";
+import { logar } from "../../../servicos/requsicoesFirebase";
+import { Alerta } from "../../Alerta";
 
-export function Login({navigation}) {
+export function Login({ navigation }) {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+  const [statusErro, setStatusErro] = useState("");
+  const [mensagemError, setMensagemError] = useState("");
+  const [errors, setErrors] = useState<{
+    email: string;
+    senha: string;
+  }>({
+    email: "",
+    senha: "",
+  });
+
+  const validationSchema = Yup.object().shape({
+    email: Yup.string()
+      .email("Digite um e-mail válido")
+      .required("O e-mail é obrigatório"),
+    senha: Yup.string()
+      .min(6, "A senha deve ter pelo menos 6 caracteres")
+      .required("A senha é obrigatória"),
+  });
+
+  async function realizarLogin() {
+    try {
+      await validationSchema.validate({ email, senha }, { abortEarly: false });
+      const resultado = await logar(email, senha);
+      setEmail("");
+      setSenha("");
+
+      setErrors({ email: "", senha: "" });
+      
+      if (resultado == "erro") {
+        setStatusErro("firebase");
+        setMensagemError("E-mail ou senha não conferem");
+      } else {
+        navigation.navigate('Principal')
+        Vibration.vibrate();
+      }
+    } catch (error) {
+      if (error instanceof Yup.ValidationError) {
+        const newErrors: {
+          email: string;
+          senha: string;
+        } = { email: "", senha: "" };
+        error.inner.forEach((err) => {
+          newErrors[err.path] = err.message;
+        });
+        setErrors(newErrors);
+      } else {
+        console.error(error);
+      }
+    }
+  }
 
   return (
     <View style={styles.headerContainer}>
@@ -18,6 +78,7 @@ export function Login({navigation}) {
         placeholder="Digite seu e-mail"
         placeholderTextColor={theme.colors.base.gray300}
       />
+      {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
       <TextInput
         style={[styles.input]}
         value={senha}
@@ -26,16 +87,28 @@ export function Login({navigation}) {
         placeholderTextColor={theme.colors.base.gray300}
         secureTextEntry
       />
+      {errors.senha && <Text style={styles.errorText}>{errors.senha}</Text>}
+
+      <Alerta
+        mensagem={mensagemError}
+        error={statusErro == "firebase"}
+        setError={setStatusErro}
+        duracao={5000}
+      />
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => { navigation.navigate('Principal') }}
+        onPress={() => {
+          realizarLogin();
+        }}
       >
         <Text style={[styles.text]}>Entrar</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => { navigation.navigate('Cadastro') }}
+        onPress={() => {
+          navigation.navigate("Cadastro");
+        }}
       >
         <Text style={[styles.text]}>Cadastrar usuário</Text>
       </TouchableOpacity>
