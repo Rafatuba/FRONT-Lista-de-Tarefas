@@ -48,13 +48,27 @@ export const styles = StyleSheet.create({
   text: {
     color: theme.colors.base.gray100
   },
-  button: {
+  button: { 
     width: 100,
     height: 40,
     borderRadius: 5,
-    marginBottom: 20,
+    marginTop: 5,
     backgroundColor: theme.colors.brand.blue_dark,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
+  textUsuario: {
+    color: theme.colors.base.gray100,
+    paddingTop: 15
+  },
+  footer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: -450,
+    padding: 10, 
+    
+    height: 5,
+    backgroundColor: theme.colors.base.gray600,
+  }
 })

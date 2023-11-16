@@ -31,11 +31,11 @@ export function Login({ navigation }) {
   useEffect(() => {
     const estadoUsuario = auth.onAuthStateChanged((usuario) => {
       if (usuario) {
-        navigation.replace("Principal")
+        navigation.replace("Principal");
       }
-    })
-    return () => estadoUsuario()
-  },[])
+    });
+    return () => estadoUsuario();
+  }, []);
 
   const validationSchema = Yup.object().shape({
     email: Yup.string()
@@ -54,12 +54,12 @@ export function Login({ navigation }) {
       setSenha("");
 
       setErrors({ email: "", senha: "" });
-      
+
       if (resultado == "erro") {
         setStatusErro("firebase");
         setMensagemError("E-mail ou senha não conferem");
       } else {
-        navigation.replace('Principal')
+        navigation.replace("Principal");
         Vibration.vibrate();
       }
     } catch (error) {
