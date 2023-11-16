@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   TextInput,
   View,
@@ -13,6 +13,7 @@ import logoImage from "../../../assets/logo2.png";
 import * as Yup from "yup";
 import { logar } from "../../../servicos/requsicoesFirebase";
 import { Alerta } from "../../Alerta";
+import { auth } from "../../../config/firebase";
 
 export function Login({ navigation }) {
   const [email, setEmail] = useState("");
@@ -26,6 +27,15 @@ export function Login({ navigation }) {
     email: "",
     senha: "",
   });
+
+  useEffect(() => {
+    const estadoUsuario = auth.onAuthStateChanged((usuario) => {
+      if (usuario) {
+        navigation.replace("Principal")
+      }
+    })
+    return () => estadoUsuario()
+  },[])
 
   const validationSchema = Yup.object().shape({
     email: Yup.string()
@@ -49,7 +59,7 @@ export function Login({ navigation }) {
         setStatusErro("firebase");
         setMensagemError("E-mail ou senha não conferem");
       } else {
-        navigation.navigate('Principal')
+        navigation.replace('Principal')
         Vibration.vibrate();
       }
     } catch (error) {

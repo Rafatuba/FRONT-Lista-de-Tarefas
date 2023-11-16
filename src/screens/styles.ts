@@ -44,5 +44,17 @@ export const styles = StyleSheet.create({
     color: theme.colors.base.gray300,
     fontSize: theme.font_size.sm,
     fontFamily: theme.font_family.bold
-  }
+  },
+  text: {
+    color: theme.colors.base.gray100
+  },
+  button: {
+    width: 100,
+    height: 40,
+    borderRadius: 5,
+    marginBottom: 20,
+    backgroundColor: theme.colors.brand.blue_dark,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
 })

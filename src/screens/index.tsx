@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import {View, Text, FlatList, Alert, TextInput} from 'react-native'
+import {View, Text, FlatList, Alert, TextInput, TouchableOpacity} from 'react-native'
 import {styles} from './styles'
 import { Header } from '../components/Header'
 import { Task } from '../components/Task'
@@ -7,7 +7,7 @@ import { TaskDTO } from '../dtos/TaskDTO'
 import { Empty } from '../components/Empty'
 import { uuid } from '../components/utils/uuid'
 
-export function HomeScreen() {
+export function HomeScreen({navigation}) {
   const [tasks, setTasks] = useState<TaskDTO[]>([])
   const [newTask, setNewTask] = useState('')
   const newTaskInputRef = useRef<TextInput>(null)
@@ -84,6 +84,14 @@ export function HomeScreen() {
           )}
           ListEmptyComponent={<Empty/>}
         />
+        <TouchableOpacity
+        style={styles.button}
+        onPress={() => 
+          navigation.replace('Login')
+        }
+      >
+        <Text style={[styles.text]}>Logout</Text>
+      </TouchableOpacity>
       </View>
     </View>
   )
