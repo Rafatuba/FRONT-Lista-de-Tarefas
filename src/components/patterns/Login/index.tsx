@@ -14,12 +14,14 @@ import * as Yup from "yup";
 import { logar } from "../../../servicos/requsicoesFirebase";
 import { Alerta } from "../../Alerta";
 import { auth } from "../../../config/firebase";
+import { Loading } from "../../Loading";
 
 export function Login({ navigation }) {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [statusErro, setStatusErro] = useState("");
   const [mensagemError, setMensagemError] = useState("");
+  const [carregando, setCarregando] = useState(true);
   const [errors, setErrors] = useState<{
     email: string;
     senha: string;
@@ -33,6 +35,7 @@ export function Login({ navigation }) {
       if (usuario) {
         navigation.replace("Principal");
       }
+      setCarregando(false);
     });
     return () => estadoUsuario();
   }, []);
@@ -76,6 +79,10 @@ export function Login({ navigation }) {
         console.error(error);
       }
     }
+  }
+
+  if (carregando) {
+    return <Loading />;
   }
 
   return (
