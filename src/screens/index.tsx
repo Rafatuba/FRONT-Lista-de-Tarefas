@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -13,7 +13,8 @@ import { Task } from "../components/Task";
 import { TaskDTO } from "../dtos/TaskDTO";
 import { Empty } from "../components/Empty";
 import { uuid } from "../components/utils/uuid";
-import { auth } from "../config/firebase";
+import { auth, database } from "../config/firebase";
+import { collection, addDoc, getDocs } from "firebase/firestore"; 
 
 export function HomeScreen({ navigation }) {
   const [tasks, setTasks] = useState<TaskDTO[]>([]);
@@ -24,15 +25,68 @@ export function HomeScreen({ navigation }) {
   const partes = dadosUsuario.split("@");
   const emailUsuario = partes[0];
 
-  function handleTaskAdd() {
-    if (newTask !== "" && newTask.length >= 5) {
-      setTasks((tasks) => [
-        ...tasks,
-        { id: uuid(), isCompleted: false, title: newTask.trim() },
-      ]);
-      setNewTask("");
+         // Tentando pegar do Firestore(ainda não funciona)
+  // useEffect(() => {
+  //   async function fetchTasks() {
+  //     const user = auth.currentUser;
 
-      newTaskInputRef.current?.blur();
+  //     if (user) {
+  //       const userId = user.uid;
+  //       const tasksRef = collection(database, 'Tasks', userId, 'tasks');
+        
+  //       try {
+  //         const querySnapshot = await getDocs(tasksRef);
+  //         const tasksData = querySnapshot.docs.map(doc => ({
+  //           id: doc.id,
+  //           ...doc.data(),
+  //         })) as TaskDTO[];
+  //         setTasks(tasksData);
+  //       } catch (error) {
+  //         console.error('Erro ao obter tarefas do Firestore', error);
+  //       }
+  //     }
+  //   }
+
+  //   fetchTasks();
+  // }, []);
+
+  async function handleTaskAdd() {
+    // if (newTask !== "" && newTask.length >= 5) {
+    //   setTasks((tasks) => [
+    //     ...tasks,
+    //     { id: uuid(), isCompleted: false, title: newTask.trim() },
+    //   ]);
+    //   setNewTask("");
+      
+
+    //   newTaskInputRef.current?.blur();
+    // }
+
+    if (newTask !== "" && newTask.length >= 5) {
+      const user = auth.currentUser;
+  
+      if (user) {
+        const userId = user.uid;
+        const tasksRef = collection(database, 'Tasks', userId, 'Tasks');
+  
+        try {
+          const newTaskDocRef = await addDoc(tasksRef, {
+            title: newTask.trim(),
+            isCompleted: false,
+          });
+  
+          // Atualize o estado local com a nova tarefa
+          setTasks((prevTasks) => [
+            ...prevTasks,
+            { id: newTaskDocRef.id, title: newTask.trim(), isCompleted: false },
+          ]);
+  
+          setNewTask("");
+          newTaskInputRef.current?.blur();
+        } catch (error) {
+          console.error('Erro ao adicionar tarefa ao Firestore', error);
+        }
+      }
     }
   }
 

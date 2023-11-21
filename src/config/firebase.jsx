@@ -1,15 +1,20 @@
-import { initializeApp } from "firebase/app";
+import { initializeApp} from "firebase/app";
+
+import { initializeFirestore, getFirestore } from "firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { initializeAuth, getReactNativePersistence } from 'firebase/auth/react-native';
+import {
+  initializeAuth,
+  getReactNativePersistence,
+} from "firebase/auth/react-native";
 import {
   API_KEY,
   AUTH_DOMAIN,
   PROJECT_ID,
-  STORAGE_BUCKET, 
-  MESSAGING_SENDER_ID, 
+  STORAGE_BUCKET,
+  MESSAGING_SENDER_ID,
   APP_ID,
-  MEASUREMENT_ID, 
-} from '@env';
+  MEASUREMENT_ID,
+} from "@env";
 
 const firebaseConfig = {
   apiKey: API_KEY,
@@ -18,12 +23,16 @@ const firebaseConfig = {
   storageBucket: STORAGE_BUCKET,
   messagingSenderId: MESSAGING_SENDER_ID,
   appId: APP_ID,
-  measurementId: MEASUREMENT_ID
+  measurementId: MEASUREMENT_ID,
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = initializeAuth(app, {
-  persistence: getReactNativePersistence(AsyncStorage)
+  persistence: getReactNativePersistence(AsyncStorage),
+});
+const database =  initializeFirestore(app, {
+  experimentalForceLongPolling: true
 })
-export { auth };
+
+export { auth, database };

@@ -2,11 +2,11 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-const Tab = createNativeStackNavigator();
-
 import {Cadastro} from '../src/components/patterns/Cadastro';
 import {Login} from '../src/components/patterns/Login';
 import { HomeScreen } from './screens';
+
+const Tab = createNativeStackNavigator();
 
 export default function Rotas() {
   return (
