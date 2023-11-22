@@ -15,6 +15,7 @@ import { Empty } from "../components/Empty";
 import { uuid } from "../components/utils/uuid";
 import { auth, database } from "../config/firebase";
 import { collection, addDoc, getDocs } from "firebase/firestore"; 
+import { pegarProdutos } from "../servicos/firestore";
 
 export function HomeScreen({ navigation }) {
   const [tasks, setTasks] = useState<TaskDTO[]>([]);
@@ -25,42 +26,16 @@ export function HomeScreen({ navigation }) {
   const partes = dadosUsuario.split("@");
   const emailUsuario = partes[0];
 
-         // Tentando pegar do Firestore(ainda não funciona)
-  // useEffect(() => {
-  //   async function fetchTasks() {
-  //     const user = auth.currentUser;
-
-  //     if (user) {
-  //       const userId = user.uid;
-  //       const tasksRef = collection(database, 'Tasks', userId, 'tasks');
-        
-  //       try {
-  //         const querySnapshot = await getDocs(tasksRef);
-  //         const tasksData = querySnapshot.docs.map(doc => ({
-  //           id: doc.id,
-  //           ...doc.data(),
-  //         })) as TaskDTO[];
-  //         setTasks(tasksData);
-  //       } catch (error) {
-  //         console.error('Erro ao obter tarefas do Firestore', error);
-  //       }
-  //     }
-  //   }
-
-  //   fetchTasks();
-  // }, []);
+  useEffect(() => {
+    async function carregarDadosTarefas() {
+      const tarefasFirestore = await pegarProdutos()
+      setTasks(tarefasFirestore)
+      console.log(tarefasFirestore)
+    }
+    carregarDadosTarefas()
+  },[])
 
   async function handleTaskAdd() {
-    // if (newTask !== "" && newTask.length >= 5) {
-    //   setTasks((tasks) => [
-    //     ...tasks,
-    //     { id: uuid(), isCompleted: false, title: newTask.trim() },
-    //   ]);
-    //   setNewTask("");
-      
-
-    //   newTaskInputRef.current?.blur();
-    // }
 
     if (newTask !== "" && newTask.length >= 5) {
       const user = auth.currentUser;
