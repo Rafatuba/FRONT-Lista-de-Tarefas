@@ -14,7 +14,7 @@ import { TaskDTO } from "../dtos/TaskDTO";
 import { Empty } from "../components/Empty";
 import { uuid } from "../components/utils/uuid";
 import { auth, database } from "../config/firebase";
-import { collection, addDoc, getDocs } from "firebase/firestore"; 
+import { collection, addDoc, doc, updateDoc } from "firebase/firestore"; 
 import { pegarProdutos } from "../servicos/firestore";
 
 export function HomeScreen({ navigation }) {
@@ -65,14 +65,34 @@ export function HomeScreen({ navigation }) {
     }
   }
 
-  function handleTaskDone(id: string) {
-    setTasks((task) =>
-      task.map((task) => {
-        task.id === id ? (task.isCompleted = !task.isCompleted) : null;
-        return task;
-      })
-    );
+  async function handleTaskDone(id: string) {
+    const user = auth.currentUser;
+    if (user) {
+      const userId = user.uid;
+      const tasksRef = collection(database, 'Tasks', userId, 'Tasks');
+    try {
+      // Atualizar no Firestore
+      const taskDocRef = doc(tasksRef, id);
+      await updateDoc(taskDocRef, {
+        isCompleted: !tasks.find(task => task.id === id).isCompleted
+      });
+  
+      // Atualizar na tela (React)
+      setTasks((currentTasks) =>
+        currentTasks.map((task) => {
+          if (task.id === id) {
+            // Inverta o valor da propriedade isCompleted
+            return { ...task, isCompleted: !task.isCompleted };
+          }
+          return task;
+        })
+      );
+    } catch (error) {
+      console.error('Erro ao atualizar no Firestore:', error);
+    }
   }
+  }
+
   function handleTaskDeleted(id: string) {
     Alert.alert("Excluir Tarefa", "Deseja excluir essa Tarefa?", [
       {
