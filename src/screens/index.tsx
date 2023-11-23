@@ -15,7 +15,7 @@ import { Empty } from "../components/Empty";
 import { uuid } from "../components/utils/uuid";
 import { auth, database } from "../config/firebase";
 import { collection, addDoc, doc, updateDoc } from "firebase/firestore"; 
-import { pegarProdutos } from "../servicos/firestore";
+import { deletarTarefa, pegarTarefas } from "../servicos/firestore";
 
 export function HomeScreen({ navigation }) {
   const [tasks, setTasks] = useState<TaskDTO[]>([]);
@@ -28,7 +28,7 @@ export function HomeScreen({ navigation }) {
 
   useEffect(() => {
     async function carregarDadosTarefas() {
-      const tarefasFirestore = await pegarProdutos()
+      const tarefasFirestore = await pegarTarefas()
       setTasks(tarefasFirestore)
       console.log(tarefasFirestore)
     }
@@ -99,7 +99,7 @@ export function HomeScreen({ navigation }) {
         text: "Sim",
         style: "default",
         onPress: () =>
-          setTasks((task) => task.filter((task) => task.id !== id)),
+          {setTasks((task) => task.filter((task) => task.id !== id)), deletarTarefa(id)}
       },
       {
         text: "Não",
